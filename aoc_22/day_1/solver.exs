@@ -36,7 +36,6 @@ data =
     chunk_func,
     after_chunk_func
   )
-  |> Enum.to_list()
   |> Enum.sort(:desc)
   |> Enum.take(3)
   |> Enum.sum()
@@ -53,5 +52,3 @@ data =
   |> Enum.sort(:desc)
   |> Enum.take(3)
   |> Enum.sum()
-
-IO.puts("Answer to part 2 = #{data}")
