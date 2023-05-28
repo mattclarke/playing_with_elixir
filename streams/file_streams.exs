@@ -6,31 +6,31 @@ defmodule Utils do
   end
 
   def line_lengths!(path) do
-    stream = File.stream!(path)
+    File.stream!(path)
       |> Stream.map(&String.replace(&1, "\n", ""))
       |> Stream.map(&(String.length(&1)))
-    Enum.to_list(stream)
+      |> Enum.to_list()
   end
 
   def longest_line_length!(path) do
-    stream = File.stream!(path)
+    File.stream!(path)
       |> Stream.map(&String.replace(&1, "\n", ""))
       |> Stream.map(&(String.length(&1)))
-    Enum.max(stream)
+      |> Enum.max()
   end
 
   def longest_line!(path) do
-    stream = File.stream!(path)
+    File.stream!(path)
       |> Stream.map(&String.replace(&1, "\n", ""))
       |> Stream.map(&{&1, String.length(&1)})
-    Enum.max(stream)
+      |> Enum.max()
   end
 
   def words_per_line!(path) do
-    stream = File.stream!(path)
+    File.stream!(path)
       |> Stream.map(&String.replace(&1, "\n", ""))
       |> Stream.map(&(length(String.split(&1))))
-    Enum.to_list(stream)
+      |> Enum.to_list()
   end
 end
 
