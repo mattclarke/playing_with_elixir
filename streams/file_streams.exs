@@ -22,8 +22,7 @@ defmodule Utils do
   def longest_line!(path) do
     File.stream!(path)
       |> Stream.map(&String.replace(&1, "\n", ""))
-      |> Stream.map(&{&1, String.length(&1)})
-      |> Enum.max()
+      |> Enum.max_by(&String.length/1)
   end
 
   def words_per_line!(path) do
@@ -43,7 +42,7 @@ IO.inspect(lengths, charlists: :as_lists)
 
 IO.puts(Utils.longest_line_length!("example.txt"))
 
-#IO.puts(Utils.longest_line!("example.txt"))
+IO.puts(Utils.longest_line!("example.txt"))
 
 lengths = Utils.words_per_line!("example.txt")
 # Use inspect otherwise will get the list as chars
