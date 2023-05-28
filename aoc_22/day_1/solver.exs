@@ -42,3 +42,16 @@ data =
   |> Enum.sum()
 
 IO.puts("Answer to part 2 = #{data}")
+
+# Internet solution
+data =
+  input_data
+  |> Stream.chunk_by(&(&1 != ""))
+  |> Stream.reject(&(&1 == [""]))
+  |> Stream.map(fn x -> Enum.map(x, &String.to_integer/1) end)
+  |> Stream.map(&Enum.sum/1)
+  |> Enum.sort(:desc)
+  |> Enum.take(3)
+  |> Enum.sum()
+
+IO.puts("Answer to part 2 = #{data}")
