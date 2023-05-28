@@ -27,8 +27,8 @@ defmodule TodoList do
   end
 end
 
-
-my_list = TodoList.new()
+my_list =
+  TodoList.new()
   |> TodoList.add_entry(%{date: ~D[2018-12-19], title: "Dentist"})
   |> TodoList.add_entry(%{date: ~D[2018-12-19], title: "Tennis"})
 

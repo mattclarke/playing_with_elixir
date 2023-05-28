@@ -27,7 +27,6 @@ defmodule TodoList do
   end
 end
 
-
 my_list = TodoList.new()
 my_list = TodoList.add_entry(my_list, "a date", "do 1")
 my_list = TodoList.add_entry(my_list, "a date", "do 2")
