@@ -57,21 +57,24 @@ defmodule TodoList.CsvImporter do
     File.stream!(path)
     |> Stream.map(&String.replace(&1, "\n", ""))
     |> Stream.map(&String.split(&1, ","))
-    |> Stream.map(fn [date, event] ->
-      date = String.split(date, "/")
-      |> Stream.map(&String.to_integer(&1))
-      |> Enum.to_list()
-
-      {_, date} = Date.new(Enum.at(date, 0), Enum.at(date, 1), Enum.at(date, 2))
-      
-      %{date: date, title: event}
+    |> Enum.map(fn [date_string, event] ->
+      %{date: parse_date(date_string), title: event}
     end)
-    |> Enum.to_list()
+    |> TodoList.new()
+  end
+
+  defp parse_date(date_string) do
+      [year, month, day] = 
+      date_string
+      |> String.split("/")
+      |> Enum.map(&String.to_integer/1)
+
+      {_, date} = Date.new(year, month, day)
+      date
   end
 end
 
-entries = TodoList.CsvImporter.import("todos.csv")
-todo_list = TodoList.new(entries)
+todo_list = TodoList.CsvImporter.import("todos.csv")
 
 IO.inspect(TodoList.entries(todo_list, ~D[2018-12-19]))
 IO.puts("---------------")
