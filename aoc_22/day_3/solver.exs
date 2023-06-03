@@ -25,7 +25,7 @@ end
 
 data =
   input_data
-  |> Stream.map(fn x -> Enum.chunk_every(x, trunc(length(x) / 2)) end)
+  |> Stream.map(fn x -> Enum.chunk_every(x, div(length(x), 2)) end)
   |> Stream.map(&find_match.(&1))
   |> Stream.map(&convert_to_score.(&1))
   |> Enum.sum()
