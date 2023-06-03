@@ -20,8 +20,7 @@ find_match = fn comps ->
   comps
   |> Stream.map(&MapSet.new/1)
   |> Enum.reduce(&MapSet.intersection/2)
-  |> Enum.into([])
-  |> List.first()
+  |> Enum.at(0)
 end
 
 data =
