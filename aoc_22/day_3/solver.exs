@@ -18,7 +18,7 @@ end
 
 find_match = fn comps ->
   comps
-  |> Enum.map(&MapSet.new/1)
+  |> Stream.map(&MapSet.new/1)
   |> Enum.reduce(&MapSet.intersection/2)
   |> Enum.into([])
   |> List.first()
@@ -34,7 +34,7 @@ data =
 IO.puts("Answer to part 1 = #{data}")
 
 data =
-  Enum.chunk_every(input_data, 3)
+  Stream.chunk_every(input_data, 3)
   |> Stream.map(&find_match.(&1))
   |> Stream.map(&convert_to_score.(&1))
   |> Enum.sum()
