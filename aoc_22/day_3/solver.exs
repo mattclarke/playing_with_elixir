@@ -17,15 +17,11 @@ convert_to_score = fn char ->
 end
 
 find_match = fn comps ->
-  [front | back] = comps
-  front = MapSet.new(front)
-
-  common =
-    Enum.reduce(back, front, fn x, acc ->
-      MapSet.intersection(acc, MapSet.new(x))
-    end)
-
-  hd(MapSet.to_list(common))
+  comps
+  |> Enum.map(&MapSet.new/1)
+  |> Enum.reduce(&MapSet.intersection/2)
+  |> Enum.into([])
+  |> List.first()
 end
 
 data =
