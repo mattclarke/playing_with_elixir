@@ -13,55 +13,34 @@ input_data =
   end)
   |> Enum.to_list()
 
-find_contained = fn {x1, x2, y1, y2} ->
-  if x1 >= y1 and x2 <= y2 do
-    1
-  else
-    if y1 >= x1 and y2 <= x2 do
-      1
-    else
-      0
-    end
+contained? = fn {x1, x2, y1, y2} ->
+  cond do
+    x1 >= y1 and x2 <= y2 -> 1
+    y1 >= x1 and y2 <= x2 -> 1
+    true -> 0
   end
 end
 
 data =
   input_data
-  |> Stream.map(&find_contained.(&1))
+  |> Stream.map(&contained?.(&1))
   |> Enum.sum()
 
 IO.puts("Answer to part 1 = #{data}")
 
-# convert_to_score = fn char ->
-#   value = :binary.first(char)
+overlaps? = fn {x1, x2, y1, y2} ->
+  cond do
+    x1 <= y1 and x2 >= y1 -> 1
+    x1 <= y2 and x2 >= y2 -> 1
+    # Check if x is contained in y
+    y1 <= x1 and y2 >= x2 -> 1
+    true -> 0
+  end
+end
 
-#   if value >= :binary.first("a") do
-#     value - :binary.first("a") + 1
-#   else
-#     value - :binary.first("A") + 27
-#   end
-# end
+data =
+  input_data
+  |> Stream.map(&overlaps?.(&1))
+  |> Enum.sum()
 
-# find_match = fn comps ->
-#   comps
-#   |> Stream.map(&MapSet.new/1)
-#   |> Enum.reduce(&MapSet.intersection/2)
-#   |> Enum.at(0)
-# end
-
-# data =
-#   input_data
-#   |> Stream.map(fn x -> Enum.chunk_every(x, div(length(x), 2)) end)
-#   |> Stream.map(&find_match.(&1))
-#   |> Stream.map(&convert_to_score.(&1))
-#   |> Enum.sum()
-
-# IO.puts("Answer to part 1 = #{data}")
-
-# data =
-#   Stream.chunk_every(input_data, 3)
-#   |> Stream.map(&find_match.(&1))
-#   |> Stream.map(&convert_to_score.(&1))
-#   |> Enum.sum()
-
-# IO.puts("Answer to part 2 = #{data}")
+IO.puts("Answer to part 2 = #{data}")
