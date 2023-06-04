@@ -30,12 +30,16 @@ IO.puts("Answer to part 1 = #{data}")
 
 overlaps? = fn {x1, x2, y1, y2} ->
   cond do
-    x1 <= y1 and x2 >= y1 -> 1
-    x1 <= y2 and x2 >= y2 -> 1
-    # Check if x is contained in y
-    y1 <= x1 and y2 >= x2 -> 1
-    true -> 0
+    Range.disjoint?(x1..x2, y1..y2) -> 0
+    true -> 1
   end
+  # cond do
+  #   x1 <= y1 and x2 >= y1 -> 1
+  #   x1 <= y2 and x2 >= y2 -> 1
+  #   # Check if x is contained in y
+  #   y1 <= x1 and y2 >= x2 -> 1
+  #   true -> 0
+  # end
 end
 
 data =
