@@ -3,22 +3,17 @@ file = "input.txt"
 input_data =
   File.stream!(file)
   |> Stream.map(&String.replace(&1, "\n", ""))
-  |> Stream.map(&String.split(&1, ","))
+  |> Stream.map(&String.replace(&1, ",", "-"))
+  |> Stream.map(&String.split(&1, "-"))
   |> Stream.map(fn x ->
-    first = String.split(List.first(x), "-")
-    second = String.split(List.last(x), "-")
-    {List.to_tuple(first), List.to_tuple(second)}
+    x
+    |> Stream.map(&String.to_integer/1)
+    |> Enum.to_list()
+    |> List.to_tuple()
   end)
   |> Enum.to_list()
 
-find_contained = fn {x, y} ->
-  {x1, x2} = x
-  x1 = String.to_integer(x1)
-  x2 = String.to_integer(x2)
-  {y1, y2} = y
-  y1 = String.to_integer(y1)
-  y2 = String.to_integer(y2)
-
+find_contained = fn {x1, x2, y1, y2} ->
   if x1 >= y1 and x2 <= y2 do
     1
   else
