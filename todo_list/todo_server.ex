@@ -22,6 +22,7 @@ defmodule TodoServer do
       receive do
         message -> process_message(todo_list, message)
       end
+
     loop(new_todo_list)
   end
 

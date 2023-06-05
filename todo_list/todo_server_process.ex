@@ -19,10 +19,11 @@ defmodule ServerProcess do
         loop(callback_module, new_state)
 
       {:cast, request} ->
-        new_state = callback_module.handle_cast(
-          request,
-          current_state
-        )
+        new_state =
+          callback_module.handle_cast(
+            request,
+            current_state
+          )
 
         loop(callback_module, new_state)
     end
@@ -42,7 +43,6 @@ defmodule ServerProcess do
   end
 end
 
-
 defmodule TodoServer do
   def start do
     ServerProcess.start(TodoServer)
@@ -60,9 +60,17 @@ defmodule TodoServer do
     ServerProcess.call(todo_server, {:entries, date})
   end
 
+  def delete_entry(todo_server, entry_id) do
+    ServerProcess.cast(todo_server, {:delete_entry, entry_id})
+  end
+
   def handle_cast({:add_entry, new_entry}, todo_list) do
     TodoList.add_entry(todo_list, new_entry)
-end
+  end
+
+  def handle_cast({:delete_entry, entry_id}, todo_list) do
+    TodoList.delete_entry(todo_list, entry_id)
+  end
 
   def handle_call({:entries, date}, todo_list) do
     {TodoList.entries(todo_list, date), todo_list}
@@ -127,6 +135,7 @@ todo_server = TodoServer.start()
 TodoServer.add_entry(todo_server, %{date: ~D[2018-12-19], title: "Dentist"})
 TodoServer.add_entry(todo_server, %{date: ~D[2018-12-20], title: "Shopping"})
 TodoServer.add_entry(todo_server, %{date: ~D[2018-12-19], title: "Movies"})
+TodoServer.delete_entry(todo_server, 3)
 
 IO.inspect(TodoServer.entries(todo_server, ~D[2018-12-19]))
 IO.puts("---------------")

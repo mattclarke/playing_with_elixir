@@ -64,13 +64,13 @@ defmodule TodoList.CsvImporter do
   end
 
   defp parse_date(date_string) do
-      [year, month, day] = 
+    [year, month, day] =
       date_string
       |> String.split("/")
       |> Enum.map(&String.to_integer/1)
 
-      {_, date} = Date.new(year, month, day)
-      date
+    {_, date} = Date.new(year, month, day)
+    date
   end
 end
 
