@@ -1,37 +1,71 @@
-defmodule TodoServer do
-  def start do
-    spawn(fn -> loop(TodoList.new()) end)
+defmodule ServerProcess do
+  def start(callback_module) do
+    spawn(fn ->
+      initial_state = callback_module.init()
+      loop(callback_module, initial_state)
+    end)
   end
 
-  def add_entry(todo_server, new_entry) do
-    send(todo_server, {:add_entry, new_entry})
-  end
-
-  def entries(todo_server, date) do
-    send(todo_server, {:entries, self(), date})
-
+  defp loop(callback_module, current_state) do
     receive do
-      {:todo_entries, entries} -> entries
-    after
-      5000 -> {:error, :timeout}
+      {:call, request, caller} ->
+        {response, new_state} =
+          callback_module.handle_call(
+            request,
+            current_state
+          )
+
+        send(caller, {:response, response})
+        loop(callback_module, new_state)
+
+      {:cast, request} ->
+        new_state = callback_module.handle_cast(
+          request,
+          current_state
+        )
+
+        loop(callback_module, new_state)
     end
   end
 
-  defp loop(todo_list) do
-    new_todo_list =
-      receive do
-        message -> process_message(todo_list, message)
-      end
-    loop(new_todo_list)
+  def call(server_pid, request) do
+    send(server_pid, {:call, request, self()})
+
+    receive do
+      {:response, response} ->
+        response
+    end
   end
 
-  defp process_message(todo_list, {:add_entry, new_entry}) do
+  def cast(server_pid, request) do
+    send(server_pid, {:cast, request})
+  end
+end
+
+
+defmodule TodoServer do
+  def start do
+    ServerProcess.start(TodoServer)
+  end
+
+  def init do
+    TodoList.new()
+  end
+
+  def add_entry(todo_server, new_entry) do
+    ServerProcess.cast(todo_server, {:add_entry, new_entry})
+  end
+
+  def entries(todo_server, date) do
+    ServerProcess.call(todo_server, {:entries, date})
+  end
+
+  def handle_cast({:add_entry, new_entry}, todo_list) do
     TodoList.add_entry(todo_list, new_entry)
-  end
+end
 
-  defp process_message(todo_list, {:entries, caller, date}) do
-    send(caller, {:todo_entries, TodoList.entries(todo_list, date)})
-    todo_list
+  def handle_call({:entries, date}, todo_list) do
+    {TodoList.entries(todo_list, date), todo_list}
   end
 end
 
