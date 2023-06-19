@@ -4,6 +4,8 @@ defmodule Todo.Database do
   @db_folder "./persist"
 
   def start do
+    IO.puts("Starting database server.")
+
     GenServer.start(__MODULE__, nil,
       name: __MODULE__
     )
@@ -21,11 +23,13 @@ defmodule Todo.Database do
     |> Todo.DatabaseWorker.get(key)
   end
 
+  @impl GenServer
   def init(_) do
     File.mkdir_p!(@db_folder)
     {:ok, start_workers()}
   end
 
+  @impl GenServer
   def handle_call({:choose_worker, key}, _, workers) do
     worker_key = :erlang.phash2(key, 3)
     {:reply, Map.get(workers, worker_key), workers}
