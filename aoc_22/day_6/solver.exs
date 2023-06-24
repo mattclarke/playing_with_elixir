@@ -8,9 +8,9 @@ input_data =
   |> String.graphemes()
 
 defmodule Foo do
-  def solve(input_data, packet_size) do
+  def solve(data, packet_size) do
     {_, result} =
-      input_data
+      data
       |> Stream.chunk_every(packet_size, 1, :discard)
       |> Stream.with_index(packet_size)
       |> Stream.filter(fn {x, _} ->
