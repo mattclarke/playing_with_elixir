@@ -12,7 +12,7 @@ defmodule Foo do
   end
 
   def parse_command([], stack, tree) do
-    # Need to pop the stack until empty
+    # Input is empty, but need to pop the stack until empty
     case stack do
       [] ->
         tree
