@@ -11,8 +11,8 @@ defmodule Foo do
     parse_command(input_data, [], %{})
   end
 
-  def parse_command([], stack, tree) do
-    # Input is empty, but need to pop the stack until empty
+  defp parse_command([], stack, tree) do
+    # No more commands, but need to pop the stack until empty
     case stack do
       [] ->
         tree
@@ -25,7 +25,7 @@ defmodule Foo do
     end
   end
 
-  def parse_command([head | tail], stack, tree) do
+  defp parse_command([head | tail], stack, tree) do
     case head do
       "$ cd .." ->
         {_, value} = Map.fetch(tree, stack)
